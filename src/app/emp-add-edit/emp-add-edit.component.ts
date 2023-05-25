@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DataShareService } from '../data-share.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { EmployeeService } from '../services/employee.service';
 
 @Component({
@@ -22,10 +22,11 @@ export class EmpAddEditComponent {
     "Intermediate"
   ]
 
-  constructor(private _fb: FormBuilder,
-    private _dialog: MatDialog,
-    // private dataService: DataShareService
-    private _empService :EmployeeService
+  constructor(
+    private _fb: FormBuilder,
+    // private dataService: DataShareService,
+    private _empService :EmployeeService,
+    private _dialogRef: MatDialogRef<EmpAddEditComponent>
     ) {
     this.empForm = this._fb.group({
       firstName: '',
@@ -48,16 +49,16 @@ export class EmpAddEditComponent {
       this._empService.addEmployee(this.empForm.value).subscribe({
         next:(val :any) =>{
           alert('Employee added sucessfully')
+          this._dialogRef.close(true)
         },
         error:(err:any) =>{
           console.error
         }
       })
     ]
-    this._dialog.closeAll()
   }
 
   onCancel(){
-    this._dialog.closeAll()
+    this._dialogRef.close(true)
   }
 }
