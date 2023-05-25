@@ -7,6 +7,7 @@ import { EmployeeService } from './services/employee.service';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import { CoreService } from './core/core.service';
 
 @Component({
   selector: 'app-root',
@@ -36,6 +37,7 @@ export class AppComponent implements OnInit {
 
   constructor(private _dialog: MatDialog,
     private _empService : EmployeeService,
+    private  _coreSercive : CoreService,
     // private dataService: DataShareService
   ){}
 
@@ -86,8 +88,22 @@ export class AppComponent implements OnInit {
     this._empService.deleteEmployee(id).subscribe({
       next:(res)=>{
         alert('Employee deleted!')
+        this._coreSercive.openSnackBar('Employee deleted!', 'done')
         this.getEmployeeList()
       }, error:console.log
+    })
+  }
+
+  openEditForm(data :any) {
+    const dialogRef = this._dialog.open(EmpAddEditComponent,{
+      data,
+    })
+    dialogRef.afterClosed().subscribe({
+      next:(val)=>{
+        if(val){
+          this.getEmployeeList()
+        }
+      },error: console.log
     })
   }
 
